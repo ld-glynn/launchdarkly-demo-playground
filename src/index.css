@@ -8,35 +8,58 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Gaming1-inspired neutral theme */
+    --background: 210 30% 8%;
+    --foreground: 0 0% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 210 25% 12%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 210 25% 12%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 42 84% 61%;
+    --primary-foreground: 210 30% 8%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 210 20% 20%;
+    --secondary-foreground: 0 0% 95%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 20% 15%;
+    --muted-foreground: 215 15% 60%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 42 84% 61%;
+    --accent-foreground: 210 30% 8%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 210 20% 20%;
+    --input: 210 20% 20%;
+    --ring: 42 84% 61%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Custom gaming theme colors */
+    --gaming-gold: 42 84% 61%;
+    --gaming-gold-dark: 42 84% 45%;
+    --gaming-navy: 210 30% 8%;
+    --gaming-navy-light: 210 25% 12%;
+    --gaming-navy-lighter: 210 20% 20%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--gaming-gold)), hsl(var(--gaming-gold-dark)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--gaming-navy)) 0%, hsl(var(--gaming-navy-light)) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(var(--gaming-navy-light)), hsl(var(--gaming-navy-lighter)));
+
+    /* Shadows */
+    --shadow-gaming: 0 20px 40px -10px hsl(var(--gaming-gold) / 0.15);
+    --shadow-card: 0 10px 30px -5px hsl(210 30% 4% / 0.3);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,33 +79,34 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Same as light theme since we're dark by default */
+    --background: 210 30% 8%;
+    --foreground: 0 0% 98%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 210 25% 12%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 210 25% 12%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 42 84% 61%;
+    --primary-foreground: 210 30% 8%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 210 20% 20%;
+    --secondary-foreground: 0 0% 95%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 210 20% 15%;
+    --muted-foreground: 215 15% 60%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 42 84% 61%;
+    --accent-foreground: 210 30% 8%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 210 20% 20%;
+    --input: 210 20% 20%;
+    --ring: 42 84% 61%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -100,6 +124,83 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Gaming theme component variants */
+  .gaming-gradient {
+    background: var(--gradient-primary);
+  }
+
+  .gaming-card {
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-smooth);
+  }
+
+  .gaming-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-gaming);
+  }
+
+  .gaming-button {
+    background: var(--gradient-primary);
+    border: 2px solid transparent;
+    transition: var(--transition-smooth);
+  }
+
+  .gaming-button:hover {
+    background: hsl(var(--gaming-gold-dark));
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-gaming);
+  }
+
+  .gaming-hero-bg {
+    background: var(--gradient-hero);
+  }
+
+  /* Animations */
+  .fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fade-in-up 0.8s ease-out forwards;
+  }
+
+  .fade-in-up.delay-1 {
+    animation-delay: 0.2s;
+  }
+
+  .fade-in-up.delay-2 {
+    animation-delay: 0.4s;
+  }
+
+  .fade-in-up.delay-3 {
+    animation-delay: 0.6s;
+  }
+
+  @keyframes fade-in-up {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .pulse-gold {
+    animation: pulse-gold 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-gold {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
   }
 }

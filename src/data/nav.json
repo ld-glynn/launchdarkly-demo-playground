@@ -1,0 +1,35 @@
+{
+  "main": [
+    { "label": "Who we are", "href": "/who-we-are", "id": "who-we-are" },
+    { "label": "What we do", "href": "/what-we-do", "id": "what-we-do" },
+    { "label": "News", "href": "/news", "id": "news" },
+    { "label": "Work with us", "href": "/work-with-us", "id": "work-with-us" },
+    { "label": "Contact", "href": "/contact", "id": "contact" }
+  ],
+  "footer": {
+    "company": [
+      { "label": "Who we are", "href": "/who-we-are" },
+      { "label": "What we do", "href": "/what-we-do" },
+      { "label": "Our values", "href": "#" },
+      { "label": "Leadership", "href": "#" }
+    ],
+    "solutions": [
+      { "label": "Platform", "href": "#" },
+      { "label": "Casino Games", "href": "#" },
+      { "label": "Sports Betting", "href": "#" },
+      { "label": "Technology", "href": "#" }
+    ],
+    "careers": [
+      { "label": "Work with us", "href": "/work-with-us" },
+      { "label": "Open positions", "href": "#" },
+      { "label": "Culture", "href": "#" },
+      { "label": "Benefits", "href": "#" }
+    ],
+    "legal": [
+      { "label": "Privacy Policy", "href": "#" },
+      { "label": "Terms of Service", "href": "#" },
+      { "label": "Responsible Gaming", "href": "#" },
+      { "label": "Compliance", "href": "#" }
+    ]
+  }
+}

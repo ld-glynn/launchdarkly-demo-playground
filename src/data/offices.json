@@ -1,0 +1,26 @@
+[
+  {
+    "city": "Brussels",
+    "country": "Belgium", 
+    "address": "Demo Address 123, 1000 Brussels, Belgium",
+    "isHeadquarters": true
+  },
+  {
+    "city": "London",
+    "country": "United Kingdom",
+    "address": "Demo Street 456, London, UK",
+    "isHeadquarters": false
+  },
+  {
+    "city": "Malta",
+    "country": "Malta",
+    "address": "Demo Plaza 789, Valletta, Malta",
+    "isHeadquarters": false
+  },
+  {
+    "city": "Paris",
+    "country": "France",
+    "address": "Demo Avenue 321, 75001 Paris, France", 
+    "isHeadquarters": false
+  }
+]

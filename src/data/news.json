@@ -1,0 +1,30 @@
+[
+  {
+    "id": "esg-report-2024",
+    "dateISO": "2025-07-07",
+    "title": "In pursuit of a sustainable future: Demo Company releases its 2024 ESG report!",
+    "image": "/src/assets/news-2.jpg",
+    "href": "/news/esg-report-2024"
+  },
+  {
+    "id": "duty-of-care-europe",
+    "dateISO": "2025-06-10", 
+    "title": "Responsible gaming: why Duty of Care is becoming an essential requirement in Europe",
+    "image": "/src/assets/news-1.jpg",
+    "href": "/news/duty-of-care-europe"
+  },
+  {
+    "id": "top-employer-2025",
+    "dateISO": "2025-01-16",
+    "title": "Demo Company achieves Top Employer certification for the 4th consecutive time!",
+    "image": "/src/assets/news-3.jpg", 
+    "href": "/news/top-employer-2025"
+  },
+  {
+    "id": "digital-era-gaming",
+    "dateISO": "2024-12-06",
+    "title": "Reinventing gaming, protecting players: a mission for the digital era",
+    "image": "/src/assets/news-4.jpg",
+    "href": "/news/digital-era-gaming"
+  }
+]

@@ -1,4 +1,5 @@
 import * as LDClient from 'launchdarkly-js-client-sdk';
+import { DEFAULT_FLAGS, FlagKey } from '@/types/flags';
 
 const clientSideID = import.meta.env.VITE_LAUNCHDARKLY_CLIENT_SIDE_ID || 'demo-client-side-id';
 
@@ -10,30 +11,16 @@ export interface User {
   custom?: Record<string, any>;
 }
 
-// Feature flag defaults - simplified to only essential flags
-export const flagDefaults = {
-  // VIP experience flag
-  'vip-gaming-experience': 'none',
-  
-  // Essential gaming app flags (for website slot machine)
-  'ui.variant': 'control',
-  'economy.spinCost': 10,
-  'features.dailyBonus': true,
-  'copy.spinCta': 'Spin Now',
-} as const;
-
-export type FlagKey = keyof typeof flagDefaults;
-
 class LaunchDarklyService {
   private client: LDClient.LDClient | null = null;
   private initialized = false;
   private currentUser: User | null = null;
 
   async initialize(user: User): Promise<LDClient.LDClient> {
-    if (this.client && this.initialized) {
-      return this.client;
-    }
-
+    // Always reset initialization when called with a new user
+    // This ensures we pick up changes after page reload
+    this.initialized = false;
+    this.client = null;
     this.currentUser = user;
 
     // For demo purposes, we'll use a mock client if no real client ID is provided
@@ -60,12 +47,29 @@ class LaunchDarklyService {
         switch (flagKey) {
           case 'vip-gaming-experience':
             // Check if user qualifies for VIP based on context
-            if (this.currentUser?.custom?.vipStatus === 'vip') {
-              return 'vip';
+            // Read directly from localStorage to ensure we get the latest value
+            try {
+              const stored = localStorage.getItem('omni-user-context');
+              console.log('🎯 Mock client evaluating VIP flag:');
+              console.log('  - Stored context:', stored);
+              
+              if (stored) {
+                const context = JSON.parse(stored);
+                const vipStatus = context?.custom?.vipStatus;
+                console.log('  - Parsed context:', context);
+                console.log('  - VIP status from context:', vipStatus);
+                console.log('  - Returning:', vipStatus === 'vip' ? 'vip' : 'none');
+                return vipStatus === 'vip' ? 'vip' : 'none';
+              }
+              
+              console.log('  - No stored context found, returning:', 'none');
+              return 'none';
+            } catch (error) {
+              console.error('❌ Error reading VIP status from localStorage:', error);
+              return 'none';
             }
-            return 'none';
           default:
-            return flagDefaults[flagKey as FlagKey] ?? defaultValue;
+            return DEFAULT_FLAGS[flagKey as FlagKey] ?? defaultValue;
         }
       },
       track: (eventKey: string, data?: any, metricValue?: number) => {

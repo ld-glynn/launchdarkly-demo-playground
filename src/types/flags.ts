@@ -1,4 +1,7 @@
 export interface GameFlags {
+  // VIP experience flag
+  'vip-gaming-experience': 'none' | 'vip';
+  
   // UI Variant flag for A/B testing button styles
   'ui.variant': 'control' | 'bold';
   
@@ -24,6 +27,7 @@ export type FlagKey = keyof GameFlags;
 
 // Default flag values for offline mode
 export const DEFAULT_FLAGS: GameFlags = {
+  'vip-gaming-experience': 'none',
   'ui.variant': 'control',
   'theme.name': 'classic',
   'economy.spinCost': 10,

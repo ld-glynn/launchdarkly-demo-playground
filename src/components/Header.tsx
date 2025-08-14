@@ -21,13 +21,17 @@ const Header: React.FC = () => {
 
   const handleSignUp = () => {
     console.log('VIP Sign Up clicked');
+    console.log('Current VIP status before signup:', currentVIPStatus);
     createVIPUserContext();
+    console.log('VIP context created, reloading page...');
     window.location.reload();
   };
   
   const handleLogout = () => {
     console.log('VIP Logout clicked');
+    console.log('Current VIP status before logout:', currentVIPStatus);
     createRegularUserContext();
+    console.log('Regular context created, reloading page...');
     window.location.reload();
   };
 

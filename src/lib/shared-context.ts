@@ -13,6 +13,9 @@ export function createVIPUserContext(): void {
   
   localStorage.setItem('omni-user-context', JSON.stringify(userContext));
   console.log('VIP context created:', userContext);
+  
+  // Dispatch custom event to notify LaunchDarkly context
+  window.dispatchEvent(new CustomEvent('userContextChanged'));
 }
 
 // Create regular user context
@@ -27,6 +30,9 @@ export function createRegularUserContext(): void {
   
   localStorage.setItem('omni-user-context', JSON.stringify(userContext));
   console.log('Regular context created:', userContext);
+  
+  // Dispatch custom event to notify LaunchDarkly context
+  window.dispatchEvent(new CustomEvent('userContextChanged'));
 }
 
 // Get current user context

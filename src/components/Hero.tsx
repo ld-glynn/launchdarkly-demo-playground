@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import heroImage from '@/assets/hero-gaming.jpg';
+import { getVIPStatus } from '@/lib/shared-context';
 
 interface HeroSlide {
   id: string;
@@ -13,9 +14,23 @@ interface HeroSlide {
 
 const Hero: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isVIP, setIsVIP] = useState(false);
 
-  // Basic hero content
-  const slides: HeroSlide[] = [
+  // Check VIP status on component mount and when it changes
+  useEffect(() => {
+    const checkVIPStatus = () => {
+      const vipStatus = getVIPStatus();
+      setIsVIP(vipStatus === 'vip');
+    };
+
+    checkVIPStatus();
+    // Check every second to catch VIP status changes
+    const interval = setInterval(checkVIPStatus, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Regular hero content
+  const regularSlides: HeroSlide[] = [
     {
       id: 'slide1',
       title: 'We are Demo1',
@@ -32,6 +47,34 @@ const Hero: React.FC = () => {
     }
   ];
 
+  // VIP-focused hero content
+  const vipSlides: HeroSlide[] = [
+    {
+      id: 'slide1',
+      title: 'Exclusive VIP Gaming',
+      subtitle: 'Elite Experience',
+      description: 'Welcome to your exclusive VIP gaming experience! Enjoy premium features, personalized service, and the highest level of gaming excellence with 30 years of industry expertise.',
+      image: heroImage,
+    },
+    {
+      id: 'slide2', 
+      title: 'VIP Technology Platform',
+      subtitle: 'Premium Gaming Excellence',
+      description: 'Experience our cutting-edge VIP gaming platform designed for discerning players. Advanced features, enhanced rewards, and personalized gaming experiences await our VIP members.',
+      image: heroImage,
+    },
+    {
+      id: 'slide3',
+      title: 'VIP Member Benefits',
+      subtitle: 'Exclusive Rewards',
+      description: 'Unlock exclusive VIP benefits including priority support, enhanced bonuses, personalized gaming recommendations, and access to premium gaming content only available to VIP members.',
+      image: heroImage,
+    }
+  ];
+
+  // Use VIP slides if user is VIP, otherwise use regular slides
+  const slides = isVIP ? vipSlides : regularSlides;
+
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
   };
@@ -41,14 +84,18 @@ const Hero: React.FC = () => {
   };
 
   const handleCTAClick = () => {
-    console.log('CTA clicked');
+    if (isVIP) {
+      console.log('VIP CTA clicked');
+    } else {
+      console.log('Regular CTA clicked');
+    }
   };
 
   // Auto-advance slides
   useEffect(() => {
     const interval = setInterval(nextSlide, 8000);
     return () => clearInterval(interval);
-  }, []);
+  }, [slides.length]);
 
   const currentSlideData = slides[currentSlide];
 
@@ -65,15 +112,18 @@ const Hero: React.FC = () => {
         <div className="absolute inset-0 bg-gaming-navy/60" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-6 pt-32 pb-16">
+      <div className={`relative z-10 container mx-auto px-6 pb-16 ${isVIP ? 'pt-40' : 'pt-32'}`}>
         <div className="grid md:grid-cols-2 gap-12 items-center min-h-[calc(100vh-8rem)]">
           
           {/* Content */}
           <div className="space-y-8 fade-in-up">
             <div className="space-y-4">
-              <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight">
-                {currentSlideData.title}
-              </h1>
+              <div className="flex items-center gap-3">
+                {isVIP && <div className="text-3xl">👑</div>}
+                <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight">
+                  {currentSlideData.title}
+                </h1>
+              </div>
               <h2 className="text-2xl md:text-4xl font-semibold text-gaming-gold">
                 {currentSlideData.subtitle}
               </h2>
@@ -89,12 +139,19 @@ const Hero: React.FC = () => {
                 size="lg"
                 className="bg-gaming-gold hover:bg-gaming-gold/90 text-primary-foreground font-semibold px-8 py-4 text-lg"
               >
-                Learn more
+                {isVIP ? 'Explore VIP Features' : 'Learn more'}
               </Button>
+              {isVIP && (
+                <Button 
+                  variant="outline"
+                  size="lg"
+                  className="border-gaming-gold text-gaming-gold hover:bg-gaming-gold hover:text-primary-foreground font-semibold px-8 py-4 text-lg"
+                >
+                  VIP Dashboard
+                </Button>
+              )}
             </div>
           </div>
-
-
 
           {/* Slide Indicators */}
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">

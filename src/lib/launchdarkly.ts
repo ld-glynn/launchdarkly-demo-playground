@@ -106,11 +106,40 @@ class LaunchDarklyService {
 
 export const ldService = new LaunchDarklyService();
 
-// Simplified tracking helpers
-export const trackEvent = (eventKey: string, metricValue?: number) => {
+// Enhanced tracking helpers for A/B testing
+export const trackEvent = (eventKey: string, data?: any, metricValue?: number) => {
   const client = ldService.getClient();
   if (client) {
-    client.track(eventKey, undefined, metricValue);
+    client.track(eventKey, data, metricValue);
   }
+};
+
+// A/B test specific tracking
+export const trackCTAClick = (variant: string, buttonText: string, userType: string) => {
+  const timestamp = Date.now();
+  const eventData = {
+    variant,
+    buttonText,
+    userType,
+    timestamp,
+    page: 'hero'
+  };
+  
+  console.log(`📊 [A/B Test] CTA clicked:`, eventData);
+  trackEvent('cta-button-clicked', eventData, 1);
+};
+
+export const trackCTAView = (variant: string, buttonText: string, userType: string) => {
+  const timestamp = Date.now();
+  const eventData = {
+    variant,
+    buttonText,
+    userType,
+    timestamp,
+    page: 'hero'
+  };
+  
+  console.log(`👁️ [A/B Test] CTA viewed:`, eventData);
+  trackEvent('cta-button-viewed', eventData, 1);
 };
 

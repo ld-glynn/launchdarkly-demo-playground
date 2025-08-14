@@ -10,6 +10,7 @@ import ResponsibleGamingBanner from '@/components/ResponsibleGamingBanner';
 import VideoModal from '@/components/VideoModal';
 import { TargetingDemo } from '@/components/TargetingDemo';
 import { TargetedBanner } from '@/components/TargetedBanner';
+import ABTestMetrics from '@/components/ABTestMetrics';
 
 import astronautDice from '@/assets/astronaut-dice.jpg';
 import casinoRoulette from '@/assets/casino-roulette.jpg';
@@ -118,6 +119,13 @@ const Index = () => {
         <section className="py-12 bg-muted/50">
           <div className="container mx-auto px-6">
             <TargetingDemo />
+          </div>
+        </section>
+        
+        {/* A/B Test Metrics */}
+        <section className="py-12">
+          <div className="container mx-auto px-6">
+            <ABTestMetrics />
           </div>
         </section>
         

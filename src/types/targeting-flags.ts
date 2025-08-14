@@ -20,6 +20,11 @@ export interface TargetingFlags {
   'content.news-section-title': string;
   'content.footer-disclaimer': string;
   'content.promo-banner': string;
+  
+  // A/B Test flags
+  'experiment.cta-button-variant': 'control' | 'variant-a' | 'variant-b';
+  'experiment.cta-button-text': string;
+  'experiment.cta-button-style': 'default' | 'gradient' | 'glow';
 }
 
 export type TargetingFlagKey = keyof TargetingFlags;
@@ -45,7 +50,12 @@ export const DEFAULT_TARGETING_FLAGS: TargetingFlags = {
   'content.main-cta': 'Start Playing',
   'content.news-section-title': 'Latest News',
   'content.footer-disclaimer': 'Demo site for LaunchDarkly integration showcase',
-  'content.promo-banner': 'Welcome! Enjoy our gaming platform'
+  'content.promo-banner': 'Welcome! Enjoy our gaming platform',
+  
+  // A/B Test defaults
+  'experiment.cta-button-variant': 'control',
+  'experiment.cta-button-text': 'Start Playing Now',
+  'experiment.cta-button-style': 'default'
 };
 
 // User context for targeting

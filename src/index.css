@@ -45,6 +45,21 @@ All colors MUST be HSL.
     --gaming-navy: 210 30% 8%;
     --gaming-navy-light: 210 25% 12%;
     --gaming-navy-lighter: 210 20% 20%;
+    
+    /* Casino specific colors for gaming app */
+    --casino-gold: 45 85% 55%;
+    --casino-silver: 220 5% 70%;
+    --casino-green: 135 75% 45%;
+    --casino-red: 0 75% 55%;
+    
+    /* Reel colors */
+    --reel-bg: 220 20% 15%;
+    --reel-symbol: 45 100% 95%;
+    --reel-winning: 45 85% 55%;
+    
+    /* Animation values */
+    --spin-duration: 1200ms;
+    --spin-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--gaming-gold)), hsl(var(--gaming-gold-dark)));
@@ -82,6 +97,17 @@ All colors MUST be HSL.
     /* Same as light theme since we're dark by default */
     --background: 210 30% 8%;
     --foreground: 0 0% 98%;
+    
+    /* Casino colors for dark theme */
+    --casino-gold: 45 85% 55%;
+    --casino-silver: 220 5% 70%;
+    --casino-green: 135 75% 45%;
+    --casino-red: 0 75% 55%;
+    
+    /* Reel colors for dark theme */
+    --reel-bg: 220 20% 15%;
+    --reel-symbol: 45 100% 95%;
+    --reel-winning: 45 85% 55%;
 
     --card: 210 25% 12%;
     --card-foreground: 0 0% 95%;
@@ -201,6 +227,49 @@ All colors MUST be HSL.
     }
     50% {
       opacity: 0.7;
+    }
+  }
+  
+  /* Casino gaming animations */
+  .animate-gold-glow {
+    animation: gold-glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes gold-glow {
+    from {
+      box-shadow: 0 0 5px hsl(var(--casino-gold) / 0.5);
+    }
+    to {
+      box-shadow: 0 0 20px hsl(var(--casino-gold) / 0.8);
+    }
+  }
+
+  .animate-pulse-win {
+    animation: pulse-win 0.5s ease-in-out;
+  }
+
+  @keyframes pulse-win {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .animate-spin-reel {
+    animation: spin-reel var(--spin-duration) var(--spin-easing);
+  }
+
+  @keyframes spin-reel {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-200%);
     }
   }
 }

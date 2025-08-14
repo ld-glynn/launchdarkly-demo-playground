@@ -1,7 +1,7 @@
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { trackCTAClick } from '@/lib/launchdarkly';
+
 
 interface SectionProps {
   id: string;
@@ -29,7 +29,7 @@ const Section: React.FC<SectionProps> = ({
   className = '',
 }) => {
   const handleCTAClick = () => {
-    trackCTAClick(`section-${id}`, id);
+    console.log('Section CTA clicked');
   };
 
   return (

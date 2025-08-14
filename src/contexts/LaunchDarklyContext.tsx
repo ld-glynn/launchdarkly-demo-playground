@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import * as LDClient from 'launchdarkly-js-client-sdk';
-import { ldService, defaultUser, flagDefaults, FlagKey, User } from '@/lib/launchdarkly';
+import { ldService, flagDefaults, FlagKey } from '@/lib/launchdarkly';
+import { getCurrentUserContext } from '@/lib/shared-context';
 
 interface LaunchDarklyContextType {
   client: LDClient.LDClient | null;
@@ -13,12 +14,10 @@ const LaunchDarklyContext = createContext<LaunchDarklyContextType | null>(null);
 
 interface LaunchDarklyProviderProps {
   children: React.ReactNode;
-  user?: User;
 }
 
 export const LaunchDarklyProvider: React.FC<LaunchDarklyProviderProps> = ({ 
-  children, 
-  user = defaultUser 
+  children
 }) => {
   const [client, setClient] = useState<LDClient.LDClient | null>(null);
   const [flags, setFlags] = useState<Record<string, any>>(flagDefaults);
@@ -27,7 +26,11 @@ export const LaunchDarklyProvider: React.FC<LaunchDarklyProviderProps> = ({
   useEffect(() => {
     const initLD = async () => {
       try {
-        const ldClient = await ldService.initialize(user);
+        // Get current user context
+        const ldUser = getCurrentUserContext();
+        console.log('LaunchDarkly initializing with user:', ldUser);
+        
+        const ldClient = await ldService.initialize(ldUser);
         setClient(ldClient);
 
         // Get all flag values
@@ -39,7 +42,7 @@ export const LaunchDarklyProvider: React.FC<LaunchDarklyProviderProps> = ({
         setFlags(flagValues);
         setLoading(false);
 
-        // Listen for flag changes (only works with real LD client)
+        // Listen for flag changes
         if (typeof ldClient.on === 'function') {
           ldClient.on('change', (settings: Record<string, any>) => {
             setFlags(settings);
@@ -53,7 +56,7 @@ export const LaunchDarklyProvider: React.FC<LaunchDarklyProviderProps> = ({
     };
 
     initLD();
-  }, [user]);
+  }, []);
 
   const useFlag = (flagKey: FlagKey, defaultValue?: any) => {
     const value = flags[flagKey] ?? defaultValue ?? flagDefaults[flagKey];

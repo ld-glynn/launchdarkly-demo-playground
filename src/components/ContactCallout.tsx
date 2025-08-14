@@ -1,14 +1,13 @@
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useFlag } from '@/contexts/LaunchDarklyContext';
-import { trackContactClick } from '@/lib/launchdarkly';
+
 
 const ContactCallout: React.FC = () => {
-  const gradientEnabled = useFlag('contact.banner-gradient', true);
+  const gradientEnabled = true;
 
   const handleContactClick = () => {
-    trackContactClick('banner');
+    console.log('Contact CTA clicked');
   };
 
   const backgroundClass = gradientEnabled 

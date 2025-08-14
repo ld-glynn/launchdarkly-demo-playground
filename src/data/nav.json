@@ -2,6 +2,7 @@
   "main": [
     { "label": "Who we are", "href": "/who-we-are", "id": "who-we-are" },
     { "label": "What we do", "href": "/what-we-do", "id": "what-we-do" },
+    { "label": "Our Games", "href": "/games", "id": "games" },
     { "label": "News", "href": "/news", "id": "news" },
     { "label": "Work with us", "href": "/work-with-us", "id": "work-with-us" },
     { "label": "Contact", "href": "/contact", "id": "contact" }

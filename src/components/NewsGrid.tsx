@@ -2,8 +2,7 @@ import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { useFlag } from '@/contexts/LaunchDarklyContext';
-import { trackCTAClick, trackCardClick } from '@/lib/launchdarkly';
+
 import { formatDate } from '@/lib/date';
 import newsData from '@/data/news.json';
 import news1 from '@/assets/news-1.jpg';
@@ -27,14 +26,14 @@ interface NewsItem {
 }
 
 const NewsGrid: React.FC = () => {
-  const layout = useFlag('news.layout', 'grid');
+  const layout = 'grid';
 
   const handleCardClick = (newsItem: NewsItem) => {
-    trackCardClick('news', newsItem.id);
+    console.log('News card clicked:', newsItem.title);
   };
 
   const handleReadAllClick = () => {
-    trackCTAClick('news-read-all', layout);
+    console.log('Read all news clicked');
   };
 
   const isCarousel = layout === 'carousel';

@@ -46,6 +46,23 @@ NEXT_PUBLIC_LAUNCHDARKLY_CLIENT_SIDE_ID=your_client_side_id
 
 ## 🎮 Feature Flags & Experiments
 
+### Omni-Channel Integration
+
+This demo showcases how Gaming1 can implement omni-channel experimentation using LaunchDarkly:
+
+**Shared User Context**: User data and engagement metrics are shared between the website and gaming app using a persistent context system stored in localStorage.
+
+**Cross-Platform Targeting**: Feature flags can target users based on their behavior across both platforms:
+- Website engagement (pages visited, CTA clicks, games viewed)
+- Gaming engagement (games played, spins, wagered amount, session duration)
+- User segments (new-user, low-engagement, medium-engagement, high-engagement)
+
+**Example Use Cases**:
+- Show different UI variants to high-engagement users
+- Adjust game economy based on website behavior
+- Target users who viewed specific games on the website
+- Personalize gaming experience based on CTA click history
+
 ### Currently Implemented Flags
 
 | Flag Key | Purpose | Variations | Default |
@@ -60,6 +77,17 @@ NEXT_PUBLIC_LAUNCHDARKLY_CLIENT_SIDE_ID=your_client_side_id
 | `contact.banner-gradient` | Contact banner styling | true, false | true |
 | `regulatory.duty-of-care-banner` | Responsible gaming banner | true, false | false |
 | `nav.dark-on-scroll` | Navigation scroll effect | true, false | true |
+| `games.advanced-search` | Advanced search functionality | true, false | true |
+| `games.recommended` | Show recommended games section | true, false | true |
+| `games.new-layout` | New grid layout for games | true, false | false |
+| `ui.variant` | Gaming UI variant (control/bold) | 'control', 'bold' | 'control' |
+| `theme.name` | Gaming theme (classic/neon) | 'classic', 'neon' | 'classic' |
+| `economy.spinCost` | Cost per spin | number | 10 |
+| `economy.rtpTarget` | Return to player target | number | 0.92 |
+| `features.dailyBonus` | Enable daily bonus feature | true, false | true |
+| `features.confettiOnWin` | Enable confetti on wins | true, false | true |
+| `copy.spinCta` | Spin button text | string | 'Spin Now' |
+| `rng.seedFromFlag` | RNG seed for deterministic demos | string | '' |
 
 ### Event Tracking
 
@@ -108,11 +136,19 @@ src/
 │   ├── Header.tsx  # Navigation with flag-controlled features
 │   ├── Hero.tsx    # Hero section with A/B variants
 │   ├── NewsGrid.tsx # News section with layout toggle
+│   ├── SlotMachine.tsx # Interactive gaming demo
+│   ├── Reels.tsx   # Slot machine reels component
+│   ├── Paytable.tsx # Game paytable display
+│   ├── SessionMetrics.tsx # Gaming session analytics
 │   └── ...
 ├── contexts/        # LaunchDarkly React context
 ├── data/           # Mock data (news, navigation, offices)
 ├── lib/            # Utilities and LaunchDarkly service
+│   ├── shared-context.ts # Omni-channel user context system
+│   ├── game-logic.ts # Slot machine game logic
+│   └── ...
 ├── pages/          # Route components
+├── types/          # TypeScript type definitions
 └── hooks/          # Custom React hooks
 ```
 
@@ -158,12 +194,18 @@ All images are AI-generated neutral placeholders:
 - `/who-we-are` - Company information
 - `/what-we-do` - Services overview  
 - `/work-with-us` - Careers page
+- `/games` - Casino games showcase with search and filtering
+- `/gaming` - Interactive slot machine demo with omni-channel context
 
 ### Interactive Elements
 - **Cookie Banner**: GDPR-style consent (flag-controlled)
 - **Responsible Gaming Banner**: Regulatory compliance (targeted)
 - **Video Modals**: Engagement tracking
 - **Form Tracking**: Lead submission events
+- **Games Search**: Advanced filtering and search functionality (flag-controlled)
+- **Game Cards**: Interactive game selection with hover effects
+- **Slot Machine**: Interactive gaming demo with real-time flag control
+- **Omni-Channel Context**: Shared user data between website and gaming app
 
 ## 🔧 Development
 

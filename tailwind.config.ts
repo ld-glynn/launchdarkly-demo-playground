@@ -68,6 +68,17 @@ export default {
 					navy: 'hsl(var(--gaming-navy))',
 					'navy-light': 'hsl(var(--gaming-navy-light))',
 					'navy-lighter': 'hsl(var(--gaming-navy-lighter))'
+				},
+				casino: {
+					gold: 'hsl(var(--casino-gold))',
+					silver: 'hsl(var(--casino-silver))',
+					green: 'hsl(var(--casino-green))',
+					red: 'hsl(var(--casino-red))'
+				},
+				reel: {
+					bg: 'hsl(var(--reel-bg))',
+					symbol: 'hsl(var(--reel-symbol))',
+					winning: 'hsl(var(--reel-winning))'
 				}
 			},
 			borderRadius: {
@@ -91,11 +102,27 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'gold-glow': {
+					'0%': { boxShadow: '0 0 5px hsl(var(--casino-gold) / 0.5)' },
+					'100%': { boxShadow: '0 0 20px hsl(var(--casino-gold) / 0.8)' }
+				},
+				'pulse-win': {
+					'0%': { transform: 'scale(1)' },
+					'50%': { transform: 'scale(1.05)' },
+					'100%': { transform: 'scale(1)' }
+				},
+				'spin-reel': {
+					'0%': { transform: 'translateY(0)' },
+					'100%': { transform: 'translateY(-200%)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'gold-glow': 'gold-glow 2s ease-in-out infinite alternate',
+				'pulse-win': 'pulse-win 0.5s ease-in-out',
+				'spin-reel': 'spin-reel var(--spin-duration) var(--spin-easing)'
 			}
 		}
 	},

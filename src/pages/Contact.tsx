@@ -8,7 +8,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CookieBanner from '@/components/CookieBanner';
 import ResponsibleGamingBanner from '@/components/ResponsibleGamingBanner';
-import { trackLeadSubmitted } from '@/lib/launchdarkly';
+
 import { useToast } from '@/hooks/use-toast';
 
 const Contact: React.FC = () => {
@@ -37,11 +37,7 @@ const Contact: React.FC = () => {
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     // Track the lead submission
-    trackLeadSubmitted('contact-form', {
-      name: formData.name,
-      company: formData.company,
-      hasMessage: !!formData.message
-    });
+          console.log('Lead submitted');
 
     toast({
       title: "Message Sent!",

@@ -1,6 +1,6 @@
 import * as LDClient from 'launchdarkly-js-client-sdk';
 
-const clientSideID = 'demo-client-side-id'; // In real app: process.env.NEXT_PUBLIC_LAUNCHDARKLY_CLIENT_SIDE_ID
+const clientSideID = import.meta.env.VITE_LAUNCHDARKLY_CLIENT_SIDE_ID || 'demo-client-side-id';
 
 export interface User {
   key: string;
@@ -10,30 +10,16 @@ export interface User {
   custom?: Record<string, any>;
 }
 
-// Default user for demo purposes
-export const defaultUser: User = {
-  key: 'demo-user',
-  name: 'Demo User',
-  email: 'demo@example.com',
-  country: 'BE', // Belgium for gaming1 demo
-  custom: {
-    segment: 'demo',
-    device: typeof window !== 'undefined' ? (window.innerWidth < 768 ? 'mobile' : 'desktop') : 'desktop'
-  }
-};
-
-// Feature flag defaults
+// Feature flag defaults - simplified to only essential flags
 export const flagDefaults = {
-  'hero.variant': 'A',
-  'hero.cta-text': 'Learn more',
-  'news.layout': 'grid',
-  'who.section-order': 'who-first',
-  'careers.show': true,
-  'cookie.banner': true,
-  'video.modal': true,
-  'contact.banner-gradient': true,
-  'regulatory.duty-of-care-banner': false,
-  'nav.dark-on-scroll': true,
+  // VIP experience flag
+  'vip-gaming-experience': 'none',
+  
+  // Essential gaming app flags (for website slot machine)
+  'ui.variant': 'control',
+  'economy.spinCost': 10,
+  'features.dailyBonus': true,
+  'copy.spinCta': 'Spin Now',
 } as const;
 
 export type FlagKey = keyof typeof flagDefaults;
@@ -41,11 +27,14 @@ export type FlagKey = keyof typeof flagDefaults;
 class LaunchDarklyService {
   private client: LDClient.LDClient | null = null;
   private initialized = false;
+  private currentUser: User | null = null;
 
-  async initialize(user: User = defaultUser): Promise<LDClient.LDClient> {
+  async initialize(user: User): Promise<LDClient.LDClient> {
     if (this.client && this.initialized) {
       return this.client;
     }
+
+    this.currentUser = user;
 
     // For demo purposes, we'll use a mock client if no real client ID is provided
     if (clientSideID === 'demo-client-side-id') {
@@ -67,17 +56,14 @@ class LaunchDarklyService {
     // Create a mock client for demo purposes
     const mockClient = {
       variation: (flagKey: string, defaultValue: any) => {
-        // Demo variations for different flags
+        // Demo variations for remaining flags
         switch (flagKey) {
-          case 'hero.variant':
-            return Math.random() > 0.5 ? 'B' : 'A';
-          case 'hero.cta-text':
-            const ctaOptions = ['Learn more', 'See platform', 'Get in touch'];
-            return ctaOptions[Math.floor(Math.random() * ctaOptions.length)];
-          case 'news.layout':
-            return Math.random() > 0.5 ? 'carousel' : 'grid';
-          case 'regulatory.duty-of-care-banner':
-            return Math.random() > 0.7; // 30% chance to show
+          case 'vip-gaming-experience':
+            // Check if user qualifies for VIP based on context
+            if (this.currentUser?.custom?.vipStatus === 'vip') {
+              return 'vip';
+            }
+            return 'none';
           default:
             return flagDefaults[flagKey as FlagKey] ?? defaultValue;
         }
@@ -91,7 +77,7 @@ class LaunchDarklyService {
       on: () => {},
       off: () => {},
       allFlags: () => ({}),
-      getUser: () => defaultUser,
+      getUser: () => ({ key: 'demo-user', anonymous: true }),
       setStreaming: () => {},
       isOffline: () => false,
     } as any;
@@ -108,35 +94,19 @@ class LaunchDarklyService {
   isInitialized(): boolean {
     return this.initialized;
   }
+
+  getUser(): User | null {
+    return this.currentUser;
+  }
 }
 
 export const ldService = new LaunchDarklyService();
 
-// Tracking helpers
-export const trackEvent = (eventKey: string, data?: any, metricValue?: number) => {
+// Simplified tracking helpers
+export const trackEvent = (eventKey: string, metricValue?: number) => {
   const client = ldService.getClient();
   if (client) {
-    client.track(eventKey, data, metricValue);
+    client.track(eventKey, undefined, metricValue);
   }
 };
 
-// Common event tracking functions
-export const trackCTAClick = (location: string, variant?: string) => {
-  trackEvent('cta_click', { location, variant });
-};
-
-export const trackVideoPlay = (location: string) => {
-  trackEvent('video_play', { location });
-};
-
-export const trackContactClick = (source: string) => {
-  trackEvent('contact_click', { source });
-};
-
-export const trackLeadSubmitted = (source: string, data?: any) => {
-  trackEvent('lead_submitted', { source, ...data });
-};
-
-export const trackCardClick = (cardType: string, cardId: string) => {
-  trackEvent('card_click', { cardType, cardId });
-};

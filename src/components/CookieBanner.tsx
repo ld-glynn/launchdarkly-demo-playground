@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { useFlag } from '@/contexts/LaunchDarklyContext';
+
 
 const CookieBanner: React.FC = () => {
   const [isVisible, setIsVisible] = useState(true);
-  const showCookieBanner = useFlag('cookie.banner', true);
+  const showCookieBanner = true;
 
   if (!showCookieBanner || !isVisible) return null;
 

@@ -8,13 +8,13 @@ import Footer from '@/components/Footer';
 import CookieBanner from '@/components/CookieBanner';
 import ResponsibleGamingBanner from '@/components/ResponsibleGamingBanner';
 import VideoModal from '@/components/VideoModal';
-import { useFlag } from '@/contexts/LaunchDarklyContext';
+
 import astronautDice from '@/assets/astronaut-dice.jpg';
 import casinoRoulette from '@/assets/casino-roulette.jpg';
 
 const Index = () => {
-  const sectionOrder = useFlag('who.section-order', 'who-first');
-  const showCareers = useFlag('careers.show', true);
+  const sectionOrder = 'who-first';
+  const showCareers = true;
   
   // Section content
   const whoWeAreSection = (
@@ -102,7 +102,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <ResponsibleGamingBanner />
+
       
       <main>
         <Hero />

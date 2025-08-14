@@ -1,14 +1,14 @@
 import React from 'react';
 import { Shield, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useFlag } from '@/contexts/LaunchDarklyContext';
+
 
 interface ResponsibleGamingBannerProps {
   onClose?: () => void;
 }
 
 const ResponsibleGamingBanner: React.FC<ResponsibleGamingBannerProps> = ({ onClose }) => {
-  const showBanner = useFlag('regulatory.duty-of-care-banner', false);
+  const showBanner = false;
 
   if (!showBanner) return null;
 

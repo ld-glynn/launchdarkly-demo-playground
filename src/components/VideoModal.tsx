@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { Play, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { useFlag } from '@/contexts/LaunchDarklyContext';
-import { trackVideoPlay } from '@/lib/launchdarkly';
+
 
 interface VideoModalProps {
   triggerImage: string;
@@ -19,10 +18,10 @@ const VideoModal: React.FC<VideoModalProps> = ({
   className = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const videoModalEnabled = useFlag('video.modal', true);
+  const videoModalEnabled = true;
 
   const handleVideoPlay = () => {
-    trackVideoPlay('section-video');
+    console.log('Video play tracked');
     setIsOpen(true);
   };
 

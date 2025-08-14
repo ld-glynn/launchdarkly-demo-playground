@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useFlag } from '@/contexts/LaunchDarklyContext';
 import heroImage from '@/assets/hero-gaming.jpg';
 import { getVIPStatus } from '@/lib/shared-context';
-import { trackCTAClick, trackCTAView } from '@/lib/launchdarkly';
 
 interface HeroSlide {
   id: string;
@@ -18,42 +16,25 @@ const Hero: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isVIP, setIsVIP] = useState(false);
 
-  // LaunchDarkly flags
-  const heroTitle = useFlag('content.hero-title', 'Next Level Gaming Experience');
-  const mainCta = useFlag('content.main-cta', 'Start Playing');
-  const welcomeMessage = useFlag('geo.welcome-message', 'Welcome to Gaming1');
-  const experienceTier = useFlag('vip.experience-tier', 'standard');
-  
-  // A/B Test flags
-  const ctaVariant = useFlag('experiment.cta-button-variant', 'control');
-  const ctaButtonText = useFlag('experiment.cta-button-text', 'Start Playing Now');
-  const ctaButtonStyle = useFlag('experiment.cta-button-style', 'default');
-
   // Check VIP status on component mount and when it changes
   useEffect(() => {
     const checkVIPStatus = () => {
       const vipStatus = getVIPStatus();
-      setIsVIP(vipStatus === 'vip' || experienceTier !== 'standard');
+      setIsVIP(vipStatus === 'vip');
     };
 
     checkVIPStatus();
     // Check every second to catch VIP status changes
     const interval = setInterval(checkVIPStatus, 1000);
     return () => clearInterval(interval);
-  }, [experienceTier]);
-  
-  // Track CTA view for A/B testing
-  useEffect(() => {
-    const userType = isVIP ? 'vip' : 'standard';
-    trackCTAView(ctaVariant, ctaButtonText, userType);
-  }, [ctaVariant, ctaButtonText, isVIP]);
+  }, []);
 
   // Regular hero content
   const regularSlides: HeroSlide[] = [
     {
       id: 'slide1',
-      title: heroTitle,
-      subtitle: welcomeMessage,
+      title: 'We are Demo1',
+      subtitle: 'Next level',
       description: 'With 30 years\' experience, Demo1 is a leader on the game of chance market. We offer a unique omnichannel experience based on a responsible approach.',
       image: heroImage,
     },
@@ -103,27 +84,10 @@ const Hero: React.FC = () => {
   };
 
   const handleCTAClick = () => {
-    const userType = isVIP ? 'vip' : 'standard';
-    
-    // Track the A/B test click
-    trackCTAClick(ctaVariant, ctaButtonText, userType);
-    
     if (isVIP) {
       console.log('VIP CTA clicked');
     } else {
       console.log('Regular CTA clicked');
-    }
-  };
-  
-  // Get button styles based on A/B test variant
-  const getButtonStyles = () => {
-    switch (ctaButtonStyle) {
-      case 'gradient':
-        return 'bg-gradient-to-r from-gaming-gold via-yellow-400 to-gaming-gold hover:from-gaming-gold/90 hover:via-yellow-400/90 hover:to-gaming-gold/90 shadow-lg hover:shadow-xl transition-all duration-300';
-      case 'glow':
-        return 'bg-gaming-gold hover:bg-gaming-gold/90 shadow-[0_0_20px_rgba(212,175,55,0.5)] hover:shadow-[0_0_30px_rgba(212,175,55,0.7)] transition-all duration-300';
-      default:
-        return 'bg-gaming-gold hover:bg-gaming-gold/90';
     }
   };
 
@@ -170,13 +134,12 @@ const Hero: React.FC = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-               <Button 
+              <Button 
                 onClick={handleCTAClick}
                 size="lg"
-                className={`${getButtonStyles()} text-primary-foreground font-semibold px-8 py-4 text-lg`}
-                data-testid={`cta-button-${ctaVariant}`}
+                className="bg-gaming-gold hover:bg-gaming-gold/90 text-primary-foreground font-semibold px-8 py-4 text-lg"
               >
-                {isVIP ? 'Explore VIP Features' : ctaButtonText}
+                {isVIP ? 'Explore VIP Features' : 'Learn more'}
               </Button>
               {isVIP && (
                 <Button 

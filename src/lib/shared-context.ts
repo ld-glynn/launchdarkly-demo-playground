@@ -57,4 +57,15 @@ export function getVIPStatus(): 'none' | 'vip' {
   return context?.custom?.vipStatus || 'none';
 }
 
+// Track gaming session for analytics
+export function trackGamingSession(gameType: string, rounds: number, totalBet: number, totalWin: number, sessionDurationMs: number) {
+  console.log('Gaming session tracked:', {
+    gameType,
+    rounds,
+    totalBet,
+    totalWin,
+    sessionDurationMs
+  });
+}
+
 

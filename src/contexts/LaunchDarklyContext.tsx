@@ -2,13 +2,15 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import * as LDClient from 'launchdarkly-js-client-sdk';
 import { ldService } from '@/lib/launchdarkly';
 import { DEFAULT_FLAGS, FlagKey } from '@/types/flags';
+import { DEFAULT_TARGETING_FLAGS, TargetingFlagKey } from '@/types/targeting-flags';
 import { getCurrentUserContext } from '@/lib/shared-context';
+import { getCurrentTargetingContext } from '@/lib/targeting-service';
 
 interface LaunchDarklyContextType {
   client: LDClient.LDClient | null;
   flags: Record<string, any>;
   loading: boolean;
-  useFlag: (flagKey: FlagKey, defaultValue?: any) => any;
+  useFlag: (flagKey: FlagKey | TargetingFlagKey, defaultValue?: any) => any;
 }
 
 const LaunchDarklyContext = createContext<LaunchDarklyContextType | null>(null);
@@ -21,27 +23,51 @@ export const LaunchDarklyProvider: React.FC<LaunchDarklyProviderProps> = ({
   children
 }) => {
   const [client, setClient] = useState<LDClient.LDClient | null>(null);
-  const [flags, setFlags] = useState<Record<string, any>>(DEFAULT_FLAGS);
+  const [flags, setFlags] = useState<Record<string, any>>({...DEFAULT_FLAGS, ...DEFAULT_TARGETING_FLAGS});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const initLD = async () => {
       try {
-        // Get current user context
+        // Get current user context (both legacy and targeting)
         const ldUser = getCurrentUserContext();
-        console.log('🚀 LaunchDarkly initializing with user:', ldUser);
-        console.log('  - User key:', ldUser.key);
-        console.log('  - VIP status:', ldUser.custom?.vipStatus);
+        const targetingUser = getCurrentTargetingContext();
         
-        const ldClient = await ldService.initialize(ldUser);
+        // Merge both contexts for comprehensive targeting
+        const mergedUser = {
+          ...ldUser,
+          country: targetingUser.country,
+          vipStatus: targetingUser.vipStatus,
+          custom: {
+            ...ldUser.custom,
+            ...targetingUser.custom,
+            targetingSegment: targetingUser.custom?.segment
+          }
+        };
+        
+        console.log('🚀 LaunchDarkly initializing with merged user:', mergedUser);
+        console.log('  - User key:', mergedUser.key);
+        console.log('  - Country:', mergedUser.country);
+        console.log('  - VIP status:', mergedUser.vipStatus);
+        
+        const ldClient = await ldService.initialize(mergedUser);
         setClient(ldClient);
 
-        // Get all flag values
+        // Get all flag values (both legacy and targeting flags)
         const flagValues: Record<string, any> = {};
+        
+        // Legacy flags
         Object.keys(DEFAULT_FLAGS).forEach((key) => {
           const value = ldClient.variation(key, DEFAULT_FLAGS[key as FlagKey]);
           flagValues[key] = value;
-          console.log(`  - Flag ${key}:`, value);
+          console.log(`  - Legacy flag ${key}:`, value);
+        });
+        
+        // Targeting flags
+        Object.keys(DEFAULT_TARGETING_FLAGS).forEach((key) => {
+          const value = ldClient.variation(key, DEFAULT_TARGETING_FLAGS[key as TargetingFlagKey]);
+          flagValues[key] = value;
+          console.log(`  - Targeting flag ${key}:`, value);
         });
         
         console.log('✅ All flag values set:', flagValues);
@@ -57,16 +83,16 @@ export const LaunchDarklyProvider: React.FC<LaunchDarklyProviderProps> = ({
         }
       } catch (error) {
         console.error('❌ Failed to initialize LaunchDarkly:', error);
-        setFlags(DEFAULT_FLAGS);
+        setFlags({...DEFAULT_FLAGS, ...DEFAULT_TARGETING_FLAGS});
         setLoading(false);
       }
     };
 
     initLD();
 
-    // Listen for storage changes to re-initialize when VIP status changes
+    // Listen for storage changes to re-initialize when context changes
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'omni-user-context') {
+      if (e.key === 'omni-user-context' || e.key === 'ld-targeting-context') {
         console.log('🔄 User context changed (storage event), re-initializing LaunchDarkly');
         initLD();
       }
@@ -79,17 +105,28 @@ export const LaunchDarklyProvider: React.FC<LaunchDarklyProviderProps> = ({
       console.log('🔄 Custom storage change detected, re-initializing LaunchDarkly');
       initLD();
     };
+    
+    const handleTargetingChange = () => {
+      console.log('🔄 Targeting context changed, re-initializing LaunchDarkly');
+      initLD();
+    };
 
     window.addEventListener('userContextChanged', handleCustomStorageChange);
+    window.addEventListener('targetingContextChanged', handleTargetingChange);
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('userContextChanged', handleCustomStorageChange);
+      window.removeEventListener('targetingContextChanged', handleTargetingChange);
     };
   }, []);
 
-  const useFlag = (flagKey: FlagKey, defaultValue?: any) => {
-    const value = flags[flagKey] ?? defaultValue ?? DEFAULT_FLAGS[flagKey];
+  const useFlag = (flagKey: FlagKey | TargetingFlagKey, defaultValue?: any) => {
+    const legacyDefault = DEFAULT_FLAGS[flagKey as FlagKey];
+    const targetingDefault = DEFAULT_TARGETING_FLAGS[flagKey as TargetingFlagKey];
+    const fallbackDefault = legacyDefault ?? targetingDefault;
+    
+    const value = flags[flagKey] ?? defaultValue ?? fallbackDefault;
     return value;
   };
 
@@ -116,7 +153,7 @@ export const useLaunchDarkly = () => {
 };
 
 // Hook for easy flag access
-export const useFlag = (flagKey: FlagKey, defaultValue?: any) => {
+export const useFlag = (flagKey: FlagKey | TargetingFlagKey, defaultValue?: any) => {
   const { useFlag } = useLaunchDarkly();
   return useFlag(flagKey, defaultValue);
 };

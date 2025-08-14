@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useFlag } from '@/contexts/LaunchDarklyContext';
 import heroImage from '@/assets/hero-gaming.jpg';
 import { getVIPStatus } from '@/lib/shared-context';
 
@@ -16,25 +17,31 @@ const Hero: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isVIP, setIsVIP] = useState(false);
 
+  // LaunchDarkly flags
+  const heroTitle = useFlag('content.hero-title', 'Next Level Gaming Experience');
+  const mainCta = useFlag('content.main-cta', 'Start Playing');
+  const welcomeMessage = useFlag('geo.welcome-message', 'Welcome to Gaming1');
+  const experienceTier = useFlag('vip.experience-tier', 'standard');
+
   // Check VIP status on component mount and when it changes
   useEffect(() => {
     const checkVIPStatus = () => {
       const vipStatus = getVIPStatus();
-      setIsVIP(vipStatus === 'vip');
+      setIsVIP(vipStatus === 'vip' || experienceTier !== 'standard');
     };
 
     checkVIPStatus();
     // Check every second to catch VIP status changes
     const interval = setInterval(checkVIPStatus, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [experienceTier]);
 
   // Regular hero content
   const regularSlides: HeroSlide[] = [
     {
       id: 'slide1',
-      title: 'We are Demo1',
-      subtitle: 'Next level',
+      title: heroTitle,
+      subtitle: welcomeMessage,
       description: 'With 30 years\' experience, Demo1 is a leader on the game of chance market. We offer a unique omnichannel experience based on a responsible approach.',
       image: heroImage,
     },
@@ -134,12 +141,12 @@ const Hero: React.FC = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button 
+               <Button 
                 onClick={handleCTAClick}
                 size="lg"
                 className="bg-gaming-gold hover:bg-gaming-gold/90 text-primary-foreground font-semibold px-8 py-4 text-lg"
               >
-                {isVIP ? 'Explore VIP Features' : 'Learn more'}
+                {isVIP ? 'Explore VIP Features' : mainCta}
               </Button>
               {isVIP && (
                 <Button 

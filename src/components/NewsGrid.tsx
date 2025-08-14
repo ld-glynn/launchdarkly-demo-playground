@@ -3,6 +3,7 @@ import { ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
+import { useFlag } from '@/contexts/LaunchDarklyContext';
 import { formatDate } from '@/lib/date';
 import newsData from '@/data/news.json';
 import news1 from '@/assets/news-1.jpg';
@@ -26,7 +27,7 @@ interface NewsItem {
 }
 
 const NewsGrid: React.FC = () => {
-  const layout = 'grid';
+  const newsSectionTitle = useFlag('content.news-section-title', 'Latest News');
 
   const handleCardClick = (newsItem: NewsItem) => {
     console.log('News card clicked:', newsItem.title);
@@ -35,8 +36,6 @@ const NewsGrid: React.FC = () => {
   const handleReadAllClick = () => {
     console.log('Read all news clicked');
   };
-
-  const isCarousel = layout === 'carousel';
 
   return (
     <section className="py-24 bg-background" data-testid="news-section">
@@ -48,28 +47,19 @@ const NewsGrid: React.FC = () => {
             What's up?
           </p>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-8">
-            News
+            {newsSectionTitle}
           </h2>
         </div>
 
-        {/* News Grid/Carousel */}
+        {/* News Grid */}
         <div 
-          className={`
-            ${isCarousel 
-              ? 'flex overflow-x-auto gap-6 pb-4 scrollbar-thin scrollbar-track-gaming-navy scrollbar-thumb-gaming-gold'
-              : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'
-            }
-            mb-12 fade-in-up delay-1
-          `}
-          data-testid={`news-${layout}`}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 fade-in-up delay-1"
+          data-testid="news-grid"
         >
           {newsData.map((item: NewsItem, index) => (
             <Card 
               key={item.id}
-              className={`
-                gaming-card border-gaming-navy-lighter cursor-pointer
-                ${isCarousel ? 'flex-none w-80' : ''}
-              `}
+              className="gaming-card border-gaming-navy-lighter cursor-pointer"
               onClick={() => handleCardClick(item)}
               data-testid={`news-card-${item.id}`}
             >

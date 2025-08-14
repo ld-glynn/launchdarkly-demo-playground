@@ -40,6 +40,8 @@ export const SlotMachine = ({ mockFlags }: SlotMachineProps) => {
   const spinCost = useFlag('economy.spinCost', 10);
   const dailyBonusEnabled = useFlag('features.dailyBonus', true);
   const spinCta = useFlag('copy.spinCta', 'Spin Now');
+  const themeName = 'classic';
+  const rtpTarget = 0.92;
 
   // Apply theme (hardcoded to classic)
   useEffect(() => {
